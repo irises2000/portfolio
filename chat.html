@@ -1,0 +1,31 @@
+<!-- 간단한 채팅 UI -->
+<div id="chatbox" style="border:1px solid #ddd; height:300px; overflow:auto; padding:10px;">
+    <div id="chat-content"></div>
+</div>
+<input type="text" id="userInput" placeholder="질문을 입력하세요!" style="width:80%;">
+<button onclick="sendMessage()">전송</button>
+
+<script>
+    async function sendMessage() {
+        let inputBox = document.getElementById('userInput');
+        let question = inputBox.value;
+        inputBox.value = '';
+
+        let chatContent = document.getElementById('chat-content');
+        chatContent.innerHTML += `<div><strong>나:</strong> ${question}</div>`;
+
+        // API 호출 (STEP 2에서 구현)
+        let response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ question: question })
+        });
+
+        let data = await response.json();
+        chatContent.innerHTML += `<div><strong>ae lion:</strong> ${data.answer}</div>`;
+
+        // 스크롤 자동으로 아래로 내리기
+        let chatbox = document.getElementById('chatbox');
+        chatbox.scrollTop = chatbox.scrollHeight;
+    }
+</script>
